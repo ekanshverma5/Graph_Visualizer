@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src='main.js'></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>  
+</head>
+<body>
+      <div class="nav">
+        <h1>Graph Visualizer</h1>
+        <input type="button" id="theme_changer" value="Dark Theme" onclick="switch_theme();" >
+        <!-- improve dark mode -->
+        <!-- make the graph start its build from the centre of the network  -->
+      </div>
+      
+    <div class="options">
+        <input type="button" value="Un-Direceted" id="onoff" onclick="onoff();">
+    </div>
+    <div class="main_area">
+        <div class="left">
+          <p>Enter Edge</p>
+          <form onsubmit="return validate_Form()">
+            <div class="edge">
+              <input type="text" id="input_edge" >
+            </div>
+        </form>
+        <div class="edge_data">
+            <p>Graph Data</p>
+            <div id="graph_Data">Null</div>
+        </div>
+        </div>
+        <div class="right">       
+          <div id="mynetwork"> </div>
+        </div>
+    
+    </div>
+    
+</body>
+
+<!-- find a way to include this in some external file -->
+<script>
+  var map={};
+  var is_Directed=false; //use this as flag for directed of undirected
+  var edges_drawn={};
+  function validate_Form()       //acts as an intermediate to stop form from reloading
+  {
+    let str=document.getElementById("onoff").value;
+    let str2="Directed";
+
+    if(str===str2)is_Directed=true;
+    else is_Directed=false;
+
+     perform();                      //original function which does all the job
+                    
+    return false;
+  }
+  function perform()             //fix this
+  {
+    var str=document.getElementById("input_edge").value;
+    document.getElementById("input_edge").value="";
+    let arr=str.split(/\b\s+(?!$)/);
+    var a=arr[0],b=arr[1],w=arr[2],len=arr.length;
+    if(len==0 || len==1)       //if not a valid edge
+    {
+      //use CSS here and color the input block as red
+      //for now just using alert
+      let box=document.getElementById("input_edge");
+      box.style.border=red;
+      alert("Invalid Edge");
+      return;
+    }
+    if(a in map==false)       //add node if not present
+    {
+      add_Node(a);
+      map[a]=a;
+    }
+    if(b in map==false)       //add node if not present
+    {
+      add_Node(b);
+      map[b]=b;
+    }
+    if(len==3)
+    {
+      if(is_Directed)add_Directed_Weighted_Edge(a,b);
+      add_Weighted_Edge(a,b,w); //creates a weighted edge
+      write(a+" "+b,w);
+    }
+    else
+    {
+      let flag=false;
+      if(is_Directed) flag=add_Directed_Edge(a,b);
+      else            flag=add_Edge(a,b);           //create an edge
+      
+      if(flag)
+        write(a,b);
+    }
+  }
+   
+  function add_Node(a) //adds node 'a' to the network with degree 0
+  {
+    nodes.add({id:a,label:a+""});
+  }
+
+  function add_Edge(a,b) //takes ID of two edges and adds an edge b/w them
+  {                  
+     let str=a+" "+b;      
+     if(str in edges_drawn==false)
+     {
+      edges.add({from: a, to: b});
+      edges_drawn[a+" "+b]=1;
+      edges_drawn[b+" "+a]=1;
+      return true;
+     }
+     return false;
+  }
+  function add_Weighted_Edge(a,b,w)             //takes ID of two and adds a weighted edge
+  {
+    edges_drawn[a+" "+b]=w;
+    edges_drawn[b+" "+a]=w;
+    edges.add({from:a,to: b,label:w});
+  }
+  function add_Directed_Edge(a,b)
+  {
+     let str=a+" "+b;
+     if(str  in edges_drawn ==false)
+     {
+       edges_drawn[str]=1;
+       edges.add({
+            from: a,
+            to: b,
+            arrows: {
+                 to: {
+                   enabled: true,
+                   type: "arrow",
+                      },
+                    },
+         });
+       return true;
+       //add a directd edge here
+     }
+     return false;      
+  }
+  function add_Directed_Weighted_Edge(a,b,w) //this does not work fine
+  {                                          //ek label + ek directed edge aa jata hai
+    edges_drawn[a+" "+b]=1;
+       edges.add({
+            from: a,
+            to: b,
+            arrows: {
+                 to: {
+                   enabled: true,
+                   type: "arrow",
+                   label:true,
+                      },
+                    },
+                    
+         });
+  }
+  function write(a,b) //function writes edge on the screen
+  {
+    let str=document.getElementById("graph_Data").innerHTML;
+    if(str=="Null")str=`${a} ${b}`;
+    else
+    str=`${str}<br/>${a} ${b}`;
+    document.getElementById("graph_Data").innerHTML=str;
+  }
+  //functions end here
+
+  var nodes = new vis.DataSet([]); //nodes array will store all the nodes and their Id
+
+  // create an array with edges
+  var edges = new vis.DataSet([]); //edges array will store all the edges b/w the nodes
+
+// create a network
+var container = document.getElementById('mynetwork');
+// provide the data in the vis format
+var data = {
+    nodes: nodes,
+    edges: edges
+};
+var options = {
+ 
+};
+
+// initialize your network!
+var network = new vis.Network(container, data, options);
+</script>
+</html>

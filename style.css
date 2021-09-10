@@ -1,0 +1,85 @@
+*{
+  padding: 0;
+  margin: 0;   
+}
+/* styling for dark mode */
+.dark-mode {  /*enhance dark mode */
+  background-color: rgb(24, 23, 23);
+  color: white;
+}
+/* Styling for dark Mode */
+.nav
+{
+  width:100%;
+display: flex;
+background-color: #202e3e;
+height: 50px;
+}
+#theme_changer{
+  margin-top: 10px;
+  margin-left:70%;
+  height: 60%;
+  border-radius: 25px;
+  box-shadow: none;
+  color: white;
+  background-color: #2a3a4d;
+}
+.nav h1
+{
+  color: aliceblue;
+text-shadow: aqua;
+}
+#onoff{
+    color: green;
+    border-radius: 40px;
+    margin-top: 5%;
+    margin-left: 20%;
+    background: none;
+    height: 35px;
+    width: 110px;
+    font-size: medium;
+    /* 
+    make somehow ki jab click ho toh upper half and lower half me backgroun switch ho */
+}
+.main_area
+{
+  display: flex;
+  width: 80%;
+  margin: auto;
+  margin-top: 5%;
+  margin-left:20%;
+}
+
+/* styling of left  */
+.left
+{
+  height: 3vh;
+  width: 20%;
+  float: left;
+}
+.edge input { /*to remove border from  input tag */
+  width: 30vh; 
+  border:0; 
+  outline:0;
+}
+.edge input:focus  /*to remove border from  input tag */
+{ 
+  background-color: rgba(140, 197, 188, 0.274);
+  outline:none!important;
+}
+
+/* styling of left right  */
+.right
+{
+  height: 3vh;
+  width: 65%;
+  margin-left: 3%;
+}
+#mynetwork {
+  width: 600px;
+  height: 450px;
+  border: 2px solid lightgray;
+  border-radius: 3px;
+  align-content: center;     
+  /* align-content: center --> did't  work once or twice  in the starting but after that the graph was always in center */
+}
