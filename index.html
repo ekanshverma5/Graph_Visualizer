@@ -145,7 +145,8 @@
      return false;      
   }
   function add_Directed_Weighted_Edge(a,b,w) //this does not work fine
-  {                                          //ek label + ek directed edge aa jata hai
+  {                                          //creates 2 edges : a undirected with weigth labelled
+                                             //                  another with direction 
     edges_drawn[a+" "+b]=1;
        edges.add({
             from: a,
