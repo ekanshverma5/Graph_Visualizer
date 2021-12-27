@@ -41,6 +41,18 @@ text-shadow: aqua;
     /* 
     make somehow ki jab click ho toh upper half and lower half me backgroun switch ho */
 }
+.btn{
+  color: green;
+  border-radius: 40px;
+  margin-top: 5%;
+  margin-left: 5%;
+  background: none;
+  height: 35px;
+  width: 120px;
+  font-size: medium;
+  /* 
+  make somehow ki jab click ho toh upper half and lower half me backgroun switch ho */
+}
 .main_area
 {
   display: flex;

@@ -19,6 +19,10 @@
       
     <div class="options">
         <input type="button" value="Un-Direceted" id="onoff" onclick="onoff();">
+        <input type="button" class="btn" value="Visualize MST" id="MST" onclick="form_MST()">
+        <input type="button" class="btn" value="Visualize DFS" id="DFS" onclick="perform_DFS()">
+        <input type="button" class="btn"  value="Visualize BFS" id="BFS" onclick="perform_BFS()">
+        <!-- <input type="button" value="Visualize MST" id="MST" onclick="form_MST()"> -->
     </div>
     <div class="main_area">
         <div class="left">
@@ -36,17 +40,21 @@
         <div class="right">       
           <div id="mynetwork"> </div>
         </div>
-    
+        
+        
     </div>
     
 </body>
 
 <!-- find a way to include this in some external file -->
 <script>
-  var map={};
-  var is_Directed=false; //use this as flag for directed of undirected
-  var edges_drawn={};
-  function validate_Form()       //acts as an intermediate to stop form from reloading
+  let max=0,min=10000000;                       //the max and min node
+  let par=[]                                    //for storing parents
+  var map={},set={};                            //for marking already drawn  & visited nodes respectively
+  var is_Directed=false;                        //use this as flag for directed of undirected
+  var edges_drawn={};                           //for marking drawn edges
+  
+  function validate_Form()                      //acts as an intermediate to stop form from reloading
   {
     let str=document.getElementById("onoff").value;
     let str2="Directed";
@@ -54,16 +62,17 @@
     if(str===str2)is_Directed=true;
     else is_Directed=false;
 
-     perform();                      //original function which does all the job
+    perform();                      //original function which does all the job
                     
     return false;
   }
-  function perform()             //fix this
+  function perform()                            //fix this
   {
     var str=document.getElementById("input_edge").value;
     document.getElementById("input_edge").value="";
     let arr=str.split(/\b\s+(?!$)/);
     var a=arr[0],b=arr[1],w=arr[2],len=arr.length;
+
     if(len==0 || len==1)       //if not a valid edge
     {
       //use CSS here and color the input block as red
@@ -73,13 +82,18 @@
       alert("Invalid Edge");
       return;
     }
+
     if(a in map==false)       //add node if not present
     {
+      max=Math.max(max,a);
+      min=Math.min(min,a);
       add_Node(a);
       map[a]=a;
     }
     if(b in map==false)       //add node if not present
     {
+      max=Math.max(max,b);
+      min=Math.min(min,b);
       add_Node(b);
       map[b]=b;
     }
@@ -98,14 +112,13 @@
       if(flag)
         write(a,b);
     }
-  }
-   
-  function add_Node(a) //adds node 'a' to the network with degree 0
+
+  } 
+  function add_Node(a)                          //adds node 'a' to the network with degree 0
   {
     nodes.add({id:a,label:a+""});
   }
-
-  function add_Edge(a,b) //takes ID of two edges and adds an edge b/w them
+  function add_Edge(a,b)                        //takes ID of two edges and adds an edge b/w them
   {                  
      let str=a+" "+b;      
      if(str in edges_drawn==false)
@@ -126,7 +139,7 @@
   function add_Directed_Edge(a,b)
   {
      let str=a+" "+b;
-     if(str  in edges_drawn ==false)
+     if(str in edges_drawn == false)
      {
        edges_drawn[str]=1;
        edges.add({
@@ -144,31 +157,131 @@
      }
      return false;      
   }
-  function add_Directed_Weighted_Edge(a,b,w) //this does not work fine
-  {                                          //creates 2 edges : a undirected with weigth labelled
-                                             //                  another with direction 
-    edges_drawn[a+" "+b]=1;
-       edges.add({
-            from: a,
-            to: b,
-            arrows: {
-                 to: {
-                   enabled: true,
-                   type: "arrow",
-                   label:true,
-                      },
-                    },
-                    
-         });
+  function add_Directed_Weighted_Edge(a,b,w)    //this does not work fine
+  {                                             
   }
-  function write(a,b) //function writes edge on the screen
+  function write(a,b)                           //function writes edge on the screen
   {
     let str=document.getElementById("graph_Data").innerHTML;
-    if(str=="Null")str=`${a} ${b}`;
+    if(str=="Null" || str=="")str=`${a} ${b}`;
     else
     str=`${str}<br/>${a} ${b}`;
     document.getElementById("graph_Data").innerHTML=str;
   }
+
+  // FUNCTIONS START FOR MST
+  function form_MST()
+  {   
+
+    destroy();  //clear entire screen
+    let list=[]; 
+    for(key in edges_drawn)
+    {
+      let arr=key.split(/\b\s+(?!$)/);
+      let temp={
+      a:arr[0],
+      b:arr[1],
+      w:edges_drawn[key]
+      };
+      list=[...list,temp];
+    }
+    list.sort((a,b)=>
+    a.w-b.w
+    );      
+    map={};
+    edges_drawn={};
+    for(let i=0; i<=max; i++)par.push(-1);   
+
+    MST(list);
+    
+  }
+  function MST(list)
+    {
+      for(let i=0; i<list.length; i++)  
+      {
+        let a=list[i].a,b=list[i].b,w=list[i].w;
+        if(find(a)!=find(b))
+        {
+          sleep(300); 
+          //this does't work fine
+          //TODO :: ek ek krke edge add ho
+          union(a,b);    
+          write(a+" "+b,w);        
+          add_Weighted_Edge(a,b,w);           
+        }       
+      }
+    }
+  function find(a)
+    {
+      if(par[a]<0)return a;
+      return par[a]=find(par[a]);
+    }
+  function union(a,b)
+    {  
+        if(a in map==false)       //add node if not present
+        {
+          add_Node(a);
+          map[a]=a;
+        }
+        if(b in map==false)       //add node if not present
+        {
+          add_Node(b);
+          map[b]=b;    
+        }
+        a=find(a);
+        b=find(b);
+        par[a]=b;  
+    }
+  function destroy()                 //destorys everything except for edges_drawn
+      {
+        nodes.clear();
+        edges.clear();        
+        let str=document.getElementById("graph_Data").innerHTML;
+        document.getElementById("graph_Data").innerHTML="";  
+      }
+  // FUNCTIONS END FOR MST
+
+  
+  //FUNCTIONS FOR DFS START HERE
+  function perform_DFS()
+  {
+    let g=new Array(max+1);
+    for(var i=1; i<=max; i++)
+    {
+      g[i]=[];
+      for(key in edges_drawn)
+      {
+        var arr=key.split(/\b\s+(?!$)/);
+        if(arr[0]==i)
+        g[i].push(arr[1]);      
+      }    
+    }
+    set={};          
+    DFS(1,g);
+  }
+  function DFS(n,g)
+    {
+       if(n in set ==false)
+       {       
+         //TODO :: HIGHLIGHT ENTER WITH GREEN 
+         
+         set[n]=1;
+         for(var i=0; i<g[n].length; i++)
+         {
+           var child=g[n][i];
+            DFS(child,g);
+         }
+         //TODO :: HIGHLIGHT EXIT WITH RED
+       }      
+    }
+  
+  function sleep(miliseconds)
+   {
+   var currentTime = new Date().getTime();
+   while (currentTime + miliseconds >= new Date().getTime()) {
+   }
+}
+  //FUNCTION FOR DFS END HERE
   //functions end here
 
   var nodes = new vis.DataSet([]); //nodes array will store all the nodes and their Id
