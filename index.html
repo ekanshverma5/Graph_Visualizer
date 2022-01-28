@@ -12,7 +12,9 @@
 <body>
       <div class="nav">
         <h1>Graph Visualizer</h1>
+     
         <input type="button" id="theme_changer" value="Dark Theme" onclick="switch_theme();" >
+     
         <!-- improve dark mode -->
         <!-- make the graph start its build from the centre of the network  -->
       </div>
@@ -62,7 +64,7 @@
     if(str===str2)is_Directed=true;
     else is_Directed=false;
 
-    perform();                      //original function which does all the job
+    perform();                                      //original function which does all the job
                     
     return false;
   }
@@ -135,6 +137,7 @@
     edges_drawn[a+" "+b]=w;
     edges_drawn[b+" "+a]=w;
     edges.add({from:a,to: b,label:w});
+   
   }
   function add_Directed_Edge(a,b)
   {
@@ -174,6 +177,8 @@
   {   
 
     destroy();  //clear entire screen
+
+    console.log("done");
     let list=[]; 
     for(key in edges_drawn)
     {
@@ -202,12 +207,14 @@
         let a=list[i].a,b=list[i].b,w=list[i].w;
         if(find(a)!=find(b))
         {
-          sleep(300); 
           //this does't work fine
-          //TODO :: ek ek krke edge add ho
+          //TODO :: ek ek krke edge add ho        
           union(a,b);    
           write(a+" "+b,w);        
-          add_Weighted_Edge(a,b,w);           
+          sleep();
+          console.log(a+" "+b);          
+          add_Weighted_Edge(a,b,w);
+                     
         }       
       }
     }
@@ -235,7 +242,8 @@
   function destroy()                 //destorys everything except for edges_drawn
       {
         nodes.clear();
-        edges.clear();        
+        edges.clear();     
+        
         let str=document.getElementById("graph_Data").innerHTML;
         document.getElementById("graph_Data").innerHTML="";  
       }
@@ -275,11 +283,12 @@
        }      
     }
   
-  function sleep(miliseconds)
-   {
-   var currentTime = new Date().getTime();
-   while (currentTime + miliseconds >= new Date().getTime()) {
-   }
+function sleep()
+{
+  for(var temp=1; temp<=1000000000; temp++)
+          {
+                //creates a time gap
+          }
 }
   //FUNCTION FOR DFS END HERE
   //functions end here

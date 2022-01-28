@@ -11,14 +11,17 @@
 .nav
 {
   width:100%;
-display: flex;
+display: grid;
 background-color: #202e3e;
+grid-template-columns: 3fr 1fr;
 height: 50px;
 }
 #theme_changer{
   margin-top: 10px;
   margin-left:70%;
+  float: right;
   height: 60%;
+  width: fit-content;
   border-radius: 25px;
   box-shadow: none;
   color: white;
@@ -26,8 +29,9 @@ height: 50px;
 }
 .nav h1
 {
+  width:fit-content;
   color: aliceblue;
-text-shadow: aqua;
+  text-shadow: aqua;
 }
 #onoff{
     color: green;
@@ -41,11 +45,14 @@ text-shadow: aqua;
     /* 
     make somehow ki jab click ho toh upper half and lower half me backgroun switch ho */
 }
+.options{
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 .btn{
   color: green;
   border-radius: 40px;
-  margin-top: 5%;
-  margin-left: 5%;
+   margin-top: 5%;
+  margin-left: 3%; 
   background: none;
   height: 35px;
   width: 120px;
@@ -95,3 +102,29 @@ text-shadow: aqua;
   align-content: center;     
   /* align-content: center --> did't  work once or twice  in the starting but after that the graph was always in center */
 }
+/*
+CODE FOR RESPONSIVE
+ */
+ @media only screen and (max-width:1150px){
+   *{
+     width: 80%;
+   }
+ .nav{
+   width: 156.5%;
+ }
+ #onoff
+ {
+  width: 80px;
+  height: 30px;
+  font-size: small;
+ }
+ .btn{
+  width: 80px;
+  height: 30px;
+  font-size: small;
+ }
+  
+}
+@media only screen and (max-width:900px){
+   
+ }
